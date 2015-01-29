@@ -13,7 +13,7 @@ install_requires = [
 
 setup(
     name='sentry-useremail',
-    version='0.1.0',
+    version='0.2.0',
     author='Dave McLain',
     author_email='github@davemclain.com',
     url='http://github.com/dmclain/sentry-useremail',
