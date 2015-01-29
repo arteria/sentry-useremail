@@ -4,6 +4,7 @@ from django import forms
 from django.conf import settings
 from django.utils.safestring import mark_safe
 
+from sentry.models import User
 from sentry.plugins import plugins
 from sentry.rules.actions.base import EventAction
 from sentry.utils.email import MessageBuilder, group_id_to_email
@@ -11,16 +12,22 @@ from sentry.web.forms.fields import UserField
 
 
 class EmailUserForm(forms.Form):
-    user = UserField()
+    username = UserField()
 
 
 class EmailUserAction(EventAction):
     form_cls = EmailUserForm
-    label = 'Send an email to {user}'
+    label = 'Send an email to {username}'
 
     def after(self, event, state):
         mail_plugin = plugins.get('mail')
         if not mail_plugin.is_enabled(event.project):
+            return
+
+        username = self.get_option('username')
+        try:
+            user = User.objects.get(username=username)
+        except:
             return
 
         project = event.project
@@ -68,5 +75,7 @@ class EmailUserAction(EventAction):
             context=context,
             reference=group,
         )
-        msg.add_users([self.get_option('user')], project=project)
+
+
+        msg.add_users([user.id], project=project)
         return msg.send()
