@@ -13,7 +13,7 @@ install_requires = [
 
 setup(
     name='sentry-useremail',
-    version='0.2.0',
+    version='0.3.0',
     author='Dave McLain',
     author_email='github@davemclain.com',
     url='http://github.com/dmclain/sentry-useremail',
@@ -25,8 +25,8 @@ setup(
     install_requires=install_requires,
     include_package_data=True,
     entry_points={
-        'sentry.apps': [
-            'sentry_useremail = sentry_useremail',
+        'sentry.plugins': [
+            'sentry_useremail = sentry_useremail.plugin:UserEmailPlugin'
         ],
     },
     classifiers=[
